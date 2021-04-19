@@ -1,0 +1,25 @@
+{
+  "name": "getbackpacktflistings",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "tsc && node ./dist/test.js",
+    "build": "tsc",
+    "prepublish": "tsc"
+  },
+  "types": "dist/index.d.ts",
+  "author": "Preport",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cuint": "^0.2.2",
+    "jsdom": "^16.5.3",
+    "tf2-sku-2": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/cuint": "^0.2.1",
+    "@types/jsdom": "^16.2.10",
+    "typescript": "^4.2.4"
+  }
+}

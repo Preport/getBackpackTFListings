@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "declaration": true,
+        "outDir": "./dist/",
+        "rootDir": "./source/",
+        "removeComments": true,
+        "strict": true,
+        "noImplicitAny": false,
+        "strictNullChecks": false,
+        "typeRoots": ["./node_modules/@types","./types"],
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true
+    }
+}
