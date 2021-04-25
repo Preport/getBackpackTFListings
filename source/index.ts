@@ -64,12 +64,12 @@ export default class getListings {
                     killstreak: parseInt(item.attributes['data-ks_tier']?.nodeValue) || null,
                     paint: parseInt(item.attributes['data-paint_hex']?.nodeValue, 16) || null,
                     quality2: parseInt(item.attributes['data-quality_elevated']?.nodeValue) || null,
+                    wear: item.attributes['data-wear_tier']?.nodeValue || null,
+                    paintkit: item.attributes['data-paint_kit']?.nodeValue || null,
                     //Not taken in to account
-                    wear: null,
-                    craftnumber: null,
+                    craftnumber: null, // data-origin=="Crafted" && data-original-title.split(' ')[len-1].startsWith('#') then parseInt(lastword.substring(1)) ?
                     output: null,
                     outputQuality: null,
-                    paintkit: null,
                     target: null
                 }
                 const spells: string[] = ["1", "2", "3"].map(sp => item.attributes['data-spell_' + sp]?.nodeValue).filter(sp => sp);

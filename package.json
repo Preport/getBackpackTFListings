@@ -1,6 +1,6 @@
 {
   "name": "getbackpacktflistings",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Used to get Listings from backpacktf. After Api's rate limit.",
   "main": "dist/index.js",
   "scripts": {
