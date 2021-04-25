@@ -42,6 +42,7 @@ type TypeListings = {
 ### getBackpackTFListings(proxies)
 - `proxies` - Optional. `Array of TypeProxy` to rotate between proxies to avoid getting `429: Too many requests.`
 ## Method
-### getListings(url)
+### getListings(url, pageAmount)
 - `url` - Required. `BackpackTF classified url` of the item you want to get the listings of.
+- `pageAmount` - Optional. How many pages you want to load should be a type of `number`.
 - **Returns** `Promise<TypeListings>`
