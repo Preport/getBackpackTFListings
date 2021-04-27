@@ -1,4 +1,4 @@
-import { JSDOM } from 'jsdom'
+import cheerio from 'cheerio'
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 import sku from 'tf2-sku-2'
 import cuint from 'cuint'
@@ -46,41 +46,46 @@ export default class getListings {
             sell: []
         }
         for (let page = 1; page < pageAmount + 1; page++) {
-            const res = await (this.__geturl(url + "&page=" + page, 0))
-            if (!res) break;
-            const dom = new JSDOM(res.data);
-            Array.from(dom.window.document.getElementsByClassName('listing')).forEach(listing => {
-
-                const item = listing.children[0].children[0] as HTMLDivElement
-                const body = listing.children[1] as HTMLDivElement;
+            const res = await (this.__geturl(url + "&page=" + page, 0));
+            //const dom = new JSDOM(res.data);
+            const $ = cheerio.load(res.data);
+            $('.listing').toArray().forEach(listing => {
+                const [item, body] = $('.item,.listing-body', listing).toArray()
+                let wear: string = null, paintkit: string = null;
+                if (item.attribs['data-paint_kit']) {
+                    const imgText = $('.item-icon', item).toArray()[0]?.attribs.style;
+                    if (imgText && imgText.includes('scrap.tf')) {
+                        [, paintkit, wear] = imgText.split('_')
+                    }
+                }
                 const skuObject: sku.skuType = {
-                    defindex: parseInt(item.attributes['data-defindex'].nodeValue),
-                    quality: parseInt(item.attributes['data-quality'].nodeValue),
-                    australium: item.attributes['data-australium']?.nodeValue == "1",
-                    craftable: item.attributes['data-craftable']?.nodeValue == "1",
-                    crateseries: parseInt(item.attributes['data-crate']?.nodeValue) || null,
-                    effect: parseInt(item.attributes['data-effect_id']?.nodeValue) || null,
-                    festive: item.attributes['data-festivized']?.nodeValue == "1",
-                    killstreak: parseInt(item.attributes['data-ks_tier']?.nodeValue) || null,
-                    paint: parseInt(item.attributes['data-paint_hex']?.nodeValue, 16) || null,
-                    quality2: parseInt(item.attributes['data-quality_elevated']?.nodeValue) || null,
-                    wear: item.attributes['data-wear_tier']?.nodeValue || null,
-                    paintkit: item.attributes['data-paint_kit']?.nodeValue || null,
+                    defindex: parseInt(item.attribs['data-defindex']),
+                    quality: parseInt(item.attribs['data-quality']),
+                    australium: item.attribs['data-australium'] == "1",
+                    craftable: item.attribs['data-craftable'] == "1",
+                    crateseries: parseInt(item.attribs['data-crate']) || null,
+                    effect: parseInt(item.attribs['data-effect_id']) || null,
+                    festive: item.attribs['data-festivized'] == "1",
+                    killstreak: parseInt(item.attribs['data-ks_tier']) || null,
+                    paint: parseInt(item.attribs['data-paint_hex'], 16) || null,
+                    quality2: parseInt(item.attribs['data-quality_elevated']) || null,
+                    wear: parseInt(wear) || null,
+                    paintkit: parseInt(paintkit) || null,
                     //Not taken in to account
                     craftnumber: null, // data-origin=="Crafted" && data-original-title.split(' ')[len-1].startsWith('#') then parseInt(lastword.substring(1)) ?
                     output: null,
                     outputQuality: null,
                     target: null
                 }
-                const spells: string[] = ["1", "2", "3"].map(sp => item.attributes['data-spell_' + sp]?.nodeValue).filter(sp => sp);
-                const parts: string[] = ["1", "2", "3"].map(sp => item.attributes['data-part_name_' + sp]?.nodeValue).filter(sp => sp);
-                const priceStrings = (item.attributes['data-listing_price']?.nodeValue as string).split(' ');
+                const spells: string[] = ["1", "2", "3"].map(sp => item.attribs['data-spell_' + sp]).filter(sp => sp);
+                const parts: string[] = ["1", "2", "3"].map(sp => item.attribs['data-part_name_' + sp]).filter(sp => sp);
+                const priceStrings = (item.attribs['data-listing_price'] as string).split(' ');
                 const isK = priceStrings[1].startsWith('key');
-                const intent = body.children[0].children[0].children[0].className.endsWith('sell') ? "sell" : "buy";
-                const button = body.children[0].children[1].children[0] as HTMLAnchorElement;
+                const intent = item.attribs["data-listing_intent"];
+                const button = $('.btn:not(.btn-warning)', body).get(0);
                 listingstoReturn[intent].push({
-                    automatic: ((button.attributes["data-original-title"]?.nodeValue || button.title) as string)?.includes('user agent') ?? false,
-                    details: body?.children[2]?.children[1]?.innerHTML,
+                    automatic: ((button.attribs["data-original-title"] || button.attribs.title) as string)?.includes('user agent') ?? false,
+                    details: $('p', body).text(),
                     price: {
                         keys: isK ? parseInt(priceStrings[0]) : 0,
                         metal: isK && priceStrings[2] ? parseFloat(priceStrings[2]) : (!isK ? parseFloat(priceStrings[0]) : 0)
@@ -88,8 +93,8 @@ export default class getListings {
                     sku: sku.fromObject(skuObject),
                     spells,
                     parts,
-                    steamid64: cuint.UINT64(parseInt(item.attributes['data-listing_account_id']?.nodeValue), 17825793).toString(),
-                    tradeUrl: button.href
+                    steamid64: cuint.UINT64(parseInt(item.attribs['data-listing_account_id']), 17825793).toString(),
+                    tradeUrl: button.attribs.href
                 })
             })
         }
@@ -102,18 +107,18 @@ export default class getListings {
     ) {
         settings = settings ?? {
             headers: {
-                'Cookie': "user-id=95tdk9cwo8awchce4zdw",
+                'Cookie': "user-id=" + randomStr(20),
                 'User-Agent':
                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0",
             },
             proxy: this.__getRoundRobinProxy()
         }
-        return new Promise<AxiosResponse<any>>(async (resolve) => {
+        return new Promise<AxiosResponse<any>>(async (resolve, reject) => {
             try {
                 const res = await axios.get(url, settings);
                 resolve(res);
             } catch (err) {
-                if (errCount > 4) resolve(null);
+                if (errCount > 4) reject(err);
                 else {
                     resolve(await this.__geturl(url, ++errCount, settings));
                 }
@@ -124,4 +129,13 @@ export default class getListings {
         if (this.proxNum == this.proxies.length) this.proxNum = 0;
         return this.proxies[this.proxNum++];
     }
+}
+const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+const charLength = characters.length;
+function randomStr(len: number) {
+    let res = '';
+    for (let i = 0; i < len; i++) {
+        res += characters.charAt(Math.floor(Math.random() * charLength));
+    }
+    return res;
 }
