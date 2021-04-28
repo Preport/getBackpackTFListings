@@ -97,7 +97,7 @@ export default class getListings {
                     automatic: ((button.attribs["data-original-title"] || button.attribs.title) as string)?.includes('user agent') ?? false,
                     details: $('p', body).text(),
                     price: {
-                        keys: isK ? parseInt(priceStrings[0]) : 0,
+                        keys: isK ? parseFloat(priceStrings[0]) : 0,
                         metal: isK && priceStrings[2] ? parseFloat(priceStrings[2]) : (!isK ? parseFloat(priceStrings[0]) : 0)
                     },
                     sku: sku.fromObject(skuObject),
