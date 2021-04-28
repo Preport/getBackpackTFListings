@@ -47,7 +47,6 @@ export default class getListings {
         }
         for (let page = 1; page < pageAmount + 1; page++) {
             const res = await (this.__geturl(url + "&page=" + page, 0));
-            //const dom = new JSDOM(res.data);
             const $ = cheerio.load(res.data);
             $('.listing').toArray().forEach(listing => {
                 const [item, body] = $('.item,.listing-body', listing).toArray()
@@ -58,6 +57,18 @@ export default class getListings {
                         [, paintkit, wear] = imgText.split('_')
                     }
                 }
+                let output: string, outputQuality: string, target: string;
+                switch (item.attribs['data-base_name']) {
+                    case 'Kit':
+                        target = item.attribs['data-priceindex']?.split('-')[1];
+                        break;
+                    case 'Fabricator':
+                        [output, outputQuality, target] = item.attribs['data-priceindex']?.split('-');
+                        break;
+                    case 'Strangifier':
+                        target = item.attribs['data-priceindex'];
+                }
+                const craftnumber = item.attribs['data-origin'] === "Crafted" ? item.attribs['data-original-title']?.split(' ').pop() : null
                 const skuObject: sku.skuType = {
                     defindex: parseInt(item.attribs['data-defindex']),
                     quality: parseInt(item.attribs['data-quality']),
@@ -71,11 +82,10 @@ export default class getListings {
                     quality2: parseInt(item.attribs['data-quality_elevated']) || null,
                     wear: parseInt(wear) || null,
                     paintkit: parseInt(paintkit) || null,
-                    //Not taken in to account
-                    craftnumber: null, // data-origin=="Crafted" && data-original-title.split(' ')[len-1].startsWith('#') then parseInt(lastword.substring(1)) ?
-                    output: null,
-                    outputQuality: null,
-                    target: null
+                    craftnumber: craftnumber?.startsWith('#') ? parseInt(craftnumber.substring(1)) || null : null,
+                    output: parseInt(output) || null,
+                    outputQuality: parseInt(outputQuality) || null,
+                    target: parseInt(target) || null
                 }
                 const spells: string[] = ["1", "2", "3"].map(sp => item.attribs['data-spell_' + sp]).filter(sp => sp);
                 const parts: string[] = ["1", "2", "3"].map(sp => item.attribs['data-part_name_' + sp]).filter(sp => sp);
