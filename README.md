@@ -26,6 +26,7 @@ type TypeListings = {
     [key in 'sell' | 'buy']: {
         sku: string,
         automatic: boolean,
+        isOnline:boolean,
         details: string,
         tradeUrl: string,
         steamid64: string,

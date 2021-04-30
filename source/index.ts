@@ -31,6 +31,7 @@ export default class getListings {
             [key in 'sell' | 'buy']: {
                 sku: string,
                 automatic: boolean,
+                isOnline: boolean,
                 details: string,
                 tradeUrl: string,
                 steamid64: string,
@@ -93,9 +94,10 @@ export default class getListings {
                 const isK = priceStrings[1].startsWith('key');
                 const intent = item.attribs["data-listing_intent"];
                 const button = $('.btn:not(.btn-warning)', body).get(0);
-                listingstoReturn[intent].push({
+                listingstoReturn[intent as "buy"].push({
                     automatic: ((button.attribs["data-original-title"] || button.attribs.title) as string)?.includes('user agent') ?? false,
                     details: $('p', body).text(),
+                    isOnline: $('.online', body).length === 1,
                     price: {
                         keys: isK ? parseFloat(priceStrings[0]) : 0,
                         metal: isK && priceStrings[2] ? parseFloat(priceStrings[2]) : (!isK ? parseFloat(priceStrings[0]) : 0)
