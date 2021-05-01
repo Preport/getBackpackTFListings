@@ -1,5 +1,6 @@
 import cheerio from 'cheerio'
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import got from 'got'
+import { HttpsProxyAgent } from 'hpagent'
 import sku from 'tf2-sku-2'
 import cuint from 'cuint'
 export type TypeProxy = {
@@ -10,14 +11,21 @@ export type TypeProxy = {
         "password": string
     }
 }
+function proxyToStr(proxy: TypeProxy) {
+    return 'http://' + proxy.auth.username + ':' + proxy.auth.password + '@' + proxy.host + ":" + proxy.port;
+}
 export default class getListings {
-    proxies: TypeProxy[]
     proxNum: number = 0
+    proxyAgents: HttpsProxyAgent[]
     /**
      * @param proxies Array of proxies if you are thinking of using `getListings` function alot. Don't overuse and fuck backpack.tf's servers though
      */
-    constructor(proxies?: TypeProxy[]) {
-        this.proxies = proxies ?? [];
+    constructor(proxies?: TypeProxy[] | string[]) {
+        this.proxyAgents = proxies?.map((prox: TypeProxy | string) => new HttpsProxyAgent({
+            keepAlive: true,
+            maxSockets: 256,
+            proxy: typeof prox === 'string' ? prox : proxyToStr(prox)
+        })) || [];
     }
     /**
      * @param url the url to get
@@ -47,8 +55,16 @@ export default class getListings {
             sell: []
         }
         for (let page = 1; page < pageAmount + 1; page++) {
-            const res = await (this.__geturl(url + "&page=" + page, 0));
-            const $ = cheerio.load(res.data);
+            const res = await got.get(url + '&page=' + page, {
+                headers: {
+                    'Cookie': "user-id=" + randomStr(20),
+                    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0",
+                },
+                agent: {
+                    http: this.__getRoundRobinProxy()
+                }
+            })
+            const $ = cheerio.load(res.body);
             $('.listing').toArray().forEach(listing => {
                 const [item, body] = $('.item,.listing-body', listing).toArray()
                 let wear: string = null, paintkit: string = null;
@@ -112,34 +128,9 @@ export default class getListings {
         }
         return listingstoReturn
     }
-    __geturl(
-        url: string,
-        errCount: number,
-        settings?: AxiosRequestConfig
-    ) {
-        settings = settings ?? {
-            headers: {
-                'Cookie': "user-id=" + randomStr(20),
-                'User-Agent':
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0",
-            },
-            proxy: this.__getRoundRobinProxy()
-        }
-        return new Promise<AxiosResponse<any>>(async (resolve, reject) => {
-            try {
-                const res = await axios.get(url, settings);
-                resolve(res);
-            } catch (err) {
-                if (errCount > 4) reject(err);
-                else {
-                    resolve(await this.__geturl(url, ++errCount, settings));
-                }
-            }
-        });
-    }
     __getRoundRobinProxy() {
-        if (this.proxNum == this.proxies.length) this.proxNum = 0;
-        return this.proxies[this.proxNum++];
+        if (this.proxNum == this.proxyAgents.length) this.proxNum = 0;
+        return this.proxyAgents[this.proxNum++];
     }
 }
 const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
