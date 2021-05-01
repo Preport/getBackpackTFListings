@@ -11,6 +11,17 @@ async function t() {
     const response = await gl.getListings('https://backpack.tf/classifieds?item=Bill%27s%20Hat&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=0')
     console.log(JSON.stringify(rp, null, "\t"));
 }
+
+//Proxy Examples
+const prox1 = {
+    "host":"127.0.0.1",
+    "port":8080,
+    "auth":{
+        "username":"user",
+        "password":"pass"
+    }
+}
+const prox2= "http://user:pass@127.0.0.1:8080"
 ```
 ## Types
 ```typescript
@@ -41,7 +52,7 @@ type TypeListings = {
 ```
 ## Constructor
 ### getBackpackTFListings(proxies)
-- `proxies` - Optional. `Array of TypeProxy` to rotate between proxies to avoid getting `429: Too many requests.`
+- `proxies` - Optional. `Array of TypeProxy` or `Array of strings` to rotate between proxies to avoid getting `429: Too many requests.`
 ## Method
 ### getListings(url[, pageAmount])
 - `url` - Required. `BackpackTF classified url` of the item you want to get the listings of.
