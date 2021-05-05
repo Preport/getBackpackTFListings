@@ -42,6 +42,7 @@ export default class getListings {
                 isOnline: boolean,
                 details: string,
                 tradeUrl: string,
+                addFriend: string,
                 steamid64: string,
                 price: {
                     keys: number,
@@ -110,6 +111,8 @@ export default class getListings {
                 const isK = priceStrings[1].startsWith('key');
                 const intent = item.attribs["data-listing_intent"];
                 const button = $('.btn:not(.btn-warning)', body).get(0);
+                const tradeUrl = button.attribs.href.includes('tradeoffer') ? button.attribs.href : null;
+                const addFriend = tradeUrl ? null : button.attribs.href;
                 listingstoReturn[intent as "buy"].push({
                     automatic: ((button.attribs["data-original-title"] || button.attribs.title) as string)?.includes('user agent') ?? false,
                     details: $('p', body).text(),
@@ -122,7 +125,8 @@ export default class getListings {
                     spells,
                     parts,
                     steamid64: cuint.UINT64(parseInt(item.attribs['data-listing_account_id']), 17825793).toString(),
-                    tradeUrl: button.attribs.href
+                    tradeUrl,
+                    addFriend
                 })
             })
         }

@@ -35,18 +35,19 @@ type TypeProxy = {
 }
 type TypeListings = {
     [key in 'sell' | 'buy']: {
-        sku: string,
-        automatic: boolean,
-        isOnline:boolean,
-        details: string,
-        tradeUrl: string,
-        steamid64: string,
+        sku: string,        // tf2-sku-2 in string .
+        automatic: boolean, // true if the lister is automatic.
+        isOnline:boolean,   // true if the lister is online.
+        details: string,    // Comment below the listing.
+        tradeUrl: string,   // If listing has tradeURL, this is an URL to send a trade offer otherwise null.
+        addFriend: string,  // If listing does not have tradeURL, this is an URL to add the person otherwise null.
+        steamid64: string,  // Listers steamID.
         price: {
             keys: number,
             metal: number
         },
-        spells: string[],
-        parts: string[]
+        spells: string[],   // Spells of the listed item.
+        parts: string[]     // Strange Parts of the listed item.
     }[]
 }
 ```
