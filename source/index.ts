@@ -63,7 +63,8 @@ export default class getListings {
                 },
                 agent: {
                     http: this.__getRoundRobinProxy()
-                }
+                },
+                timeout: 10000
             })
             const $ = cheerio.load(res.body);
             $('.listing').toArray().forEach(listing => {
