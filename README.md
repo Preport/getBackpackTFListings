@@ -21,7 +21,7 @@ const prox1 = {
         "password":"pass"
     }
 }
-const prox2= "http://user:pass@127.0.0.1:8080"
+const prox2 = "http://user:pass@127.0.0.1:8080"
 ```
 ## Types
 ```typescript
@@ -37,7 +37,7 @@ type TypeListings = {
     [key in 'sell' | 'buy']: {
         sku: string,        // tf2-sku-2 in string .
         automatic: boolean, // true if the lister is automatic.
-        isOnline:boolean,   // true if the lister is online.
+        isOnline: boolean,   // true if the lister is online.
         details: string,    // Comment below the listing.
         tradeUrl: string,   // If listing has tradeURL, this is an URL to send a trade offer otherwise null.
         addFriend: string,  // If listing does not have tradeURL, this is an URL to add the person otherwise null.
