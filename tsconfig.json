@@ -5,7 +5,7 @@
         "declaration": true,
         "outDir": "./dist/",
         "rootDir": "./source/",
-        "removeComments": true,
+        "removeComments": false,
         "strict": true,
         "noImplicitAny": false,
         "strictNullChecks": false,
