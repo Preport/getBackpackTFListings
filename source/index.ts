@@ -18,7 +18,7 @@ export default class getListings {
     proxNum: number = 0
     proxyAgents: HttpsProxyAgent[]
     /**
-     * @param proxies Array of proxies if you are thinking of using `getListings` function alot. Don't overuse and fuck backpack.tf's servers though
+     * @param proxies Array of proxies if you are thinking of using `getListings` function alot.
      */
     constructor(proxies?: TypeProxy[] | string[]) {
         this.proxyAgents = proxies?.map((prox: TypeProxy | string) => new HttpsProxyAgent({
