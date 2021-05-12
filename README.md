@@ -23,18 +23,17 @@ const prox1 = {
 }
 const prox2 = "http://user:pass@127.0.0.1:8080"
 ```
-## Types
+## Namespace
 ```typescript
-type TypeProxy = {
-    "host": string,
-    "port": number,
-    "auth": {
-        "username": string,
-        "password": string
+    interface Proxy {
+        "host": string,
+        "port": number,
+        "auth": {
+            "username": string,
+            "password": string
+        }
     }
-}
-type TypeListings = {
-    [key in 'sell' | 'buy']: {
+    interface Listing {
         sku: string,        // tf2-sku-2 in string .
         automatic: boolean, // true if the lister is automatic.
         isOnline: boolean,   // true if the lister is online.
@@ -48,14 +47,13 @@ type TypeListings = {
         },
         spells: string[],   // Spells of the listed item.
         parts: string[]     // Strange Parts of the listed item.
-    }[]
-}
+    }
 ```
 ## Constructor
 ### getBackpackTFListings(proxies)
-- `proxies` - Optional. `Array of TypeProxy` or `Array of strings` to rotate between proxies to avoid getting `429: Too many requests.`
+- `proxies` - Optional. `Proxy[]` or `string[]` to rotate between proxies to avoid getting `429: Too many requests.`
 ## Method
 ### getListings(url[, pageAmount])
 - `url` - Required. `BackpackTF classified url` of the item you want to get the listings of.
 - `pageAmount` - Optional. How many pages you want to load should be a type of `number`.
-- **Returns** `Promise<TypeListings>`
+- **Returns** `Promise<Listing[]>`
