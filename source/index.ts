@@ -3,25 +3,18 @@ import got from 'got'
 import { HttpsProxyAgent } from 'hpagent'
 import sku from 'tf2-sku-2'
 import cuint from 'cuint'
-export type TypeProxy = {
-    "host": string,
-    "port": number,
-    "auth": {
-        "username": string,
-        "password": string
-    }
-}
-function proxyToStr(proxy: TypeProxy) {
+function proxyToStr(proxy: getListings.Proxy) {
     return 'http://' + proxy.auth.username + ':' + proxy.auth.password + '@' + proxy.host + ":" + proxy.port;
 }
-export default class getListings {
+
+class getListings {
     proxNum: number = 0
     proxyAgents: HttpsProxyAgent[]
     /**
      * @param proxies Array of proxies if you are thinking of using `getListings` function alot.
      */
-    constructor(proxies?: TypeProxy[] | string[]) {
-        this.proxyAgents = proxies?.map((prox: TypeProxy | string) => new HttpsProxyAgent({
+    constructor(proxies?: getListings.Proxy[] | string[]) {
+        this.proxyAgents = proxies?.map((prox: getListings.Proxy | string) => new HttpsProxyAgent({
             keepAlive: true,
             maxSockets: 256,
             proxy: typeof prox === 'string' ? prox : proxyToStr(prox)
@@ -138,6 +131,36 @@ export default class getListings {
         return this.proxyAgents[this.proxNum++];
     }
 }
+namespace getListings {
+    export interface Proxy {
+        "host": string,
+        "port": number,
+        "auth": {
+            "username": string,
+            "password": string
+        }
+    }
+    export interface Listing {
+        sku: string,        // tf2-sku-2 in string .
+        automatic: boolean, // true if the lister is automatic.
+        isOnline: boolean,   // true if the lister is online.
+        details: string,    // Comment below the listing.
+        tradeUrl: string,   // If listing has tradeURL, this is an URL to send a trade offer otherwise null.
+        addFriend: string,  // If listing does not have tradeURL, this is an URL to add the person otherwise null.
+        steamid64: string,  // Listers steamID.
+        price: {
+            keys: number,
+            metal: number
+        },
+        spells: string[],   // Spells of the listed item.
+        parts: string[]     // Strange Parts of the listed item.
+    }
+}
+
+
+
+export = getListings;
+
 const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const charLength = characters.length;
 function randomStr(len: number) {
