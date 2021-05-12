@@ -48,6 +48,23 @@ const prox2 = "http://user:pass@127.0.0.1:8080"
         spells: string[],   // Spells of the listed item.
         parts: string[]     // Strange Parts of the listed item.
     }
+    type Response = {
+        [intent in 'buy' | 'sell']: {
+            sku: string,
+            automatic: boolean,
+            isOnline: boolean,
+            details: string,
+            tradeUrl: string,
+            addFriend: string,
+            steamid64: string,
+            price: {
+                keys: number,
+                metal: number
+            },
+            spells: string[],
+            parts: string[]
+        }[]
+    }
 ```
 ## Constructor
 ### getBackpackTFListings(proxies)
@@ -56,4 +73,4 @@ const prox2 = "http://user:pass@127.0.0.1:8080"
 ### getListings(url[, pageAmount])
 - `url` - Required. `BackpackTF classified url` of the item you want to get the listings of.
 - `pageAmount` - Optional. How many pages you want to load should be a type of `number`.
-- **Returns** `Promise<Listing[]>`
+- **Returns** `Promise<Response>`

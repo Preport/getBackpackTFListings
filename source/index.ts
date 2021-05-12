@@ -28,23 +28,7 @@ class getListings {
      */
     async getListings(url: string, pageAmount?: number) {
         pageAmount = Math.max(1, pageAmount ?? 1);
-        const listingstoReturn: {
-            [key in 'sell' | 'buy']: {
-                sku: string,
-                automatic: boolean,
-                isOnline: boolean,
-                details: string,
-                tradeUrl: string,
-                addFriend: string,
-                steamid64: string,
-                price: {
-                    keys: number,
-                    metal: number
-                },
-                spells: string[],
-                parts: string[]
-            }[]
-        } = {
+        const listingstoReturn: getListings.Response = {
             buy: [],
             sell: []
         }
@@ -154,6 +138,23 @@ namespace getListings {
         },
         spells: string[],   // Spells of the listed item.
         parts: string[]     // Strange Parts of the listed item.
+    }
+    export type Response = {
+        [intent in 'buy' | 'sell']: {
+            sku: string,
+            automatic: boolean,
+            isOnline: boolean,
+            details: string,
+            tradeUrl: string,
+            addFriend: string,
+            steamid64: string,
+            price: {
+                keys: number,
+                metal: number
+            },
+            spells: string[],
+            parts: string[]
+        }[]
     }
 }
 
