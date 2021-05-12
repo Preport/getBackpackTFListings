@@ -16,7 +16,7 @@
     "cuint": "^0.2.2",
     "got": "^11.8.2",
     "hpagent": "^0.1.1",
-    "tf2-sku-2": "^1.1.1"
+    "tf2-sku-2": "^2.0.1"
   },
   "devDependencies": {
     "@types/cuint": "^0.2.1",

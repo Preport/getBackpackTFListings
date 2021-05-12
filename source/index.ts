@@ -81,7 +81,7 @@ class getListings {
                         target = item.attribs['data-priceindex'];
                 }
                 const craftnumber = item.attribs['data-origin'] === "Crafted" ? item.attribs['data-original-title']?.split(' ').pop() : null
-                const skuObject: sku.skuType = {
+                const skuObject: sku = {
                     defindex: parseInt(item.attribs['data-defindex']),
                     quality: parseInt(item.attribs['data-quality']),
                     australium: item.attribs['data-australium'] == "1",
