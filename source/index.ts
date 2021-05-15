@@ -46,11 +46,11 @@ class getListings {
             const $ = cheerio.load(res.body);
             $('.listing').toArray().forEach(listing => {
                 const [item, body] = $('.item,.listing-body', listing).toArray()
-                let wear: string = null, paintkit: string = null;
+                let wear: number = null, paintkit: number = null;
                 if (item.attribs['data-paint_kit']) {
                     const imgText = $('.item-icon', item).toArray()[0]?.attribs.style;
                     if (imgText && imgText.includes('scrap.tf')) {
-                        [, paintkit, wear] = imgText.split('_')
+                        [, paintkit, wear] = imgText.split('_').map(s => parseInt(s) || null)
                     }
                 }
                 let output: string, outputQuality: string, target: string;
@@ -79,8 +79,8 @@ class getListings {
                     killstreak: parseInt(item.attribs['data-ks_tier']) || null,
                     paint: parseInt(item.attribs['data-paint_hex'], 16) || null,
                     quality2: parseInt(item.attribs['data-quality_elevated']) || null,
-                    wear: parseInt(wear) || null,
-                    paintkit: parseInt(paintkit) || null,
+                    wear: wear || null,
+                    paintkit: paintkit || null,
                     craftnumber: craftnumber?.startsWith('#') ? parseInt(craftnumber.substring(1)) || null : null,
                     output: parseInt(output) || null,
                     outputQuality: parseInt(outputQuality) || null,
