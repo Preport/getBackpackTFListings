@@ -62,6 +62,7 @@ class getListings {
                         [output, outputQuality, target] = item.attribs['data-priceindex']?.split('-');
                         break;
                     case 'Strangifier':
+                    case 'Unusualifier':
                         target = item.attribs['data-priceindex'];
                 }
                 const craftnumber = item.attribs['data-origin'] === "Crafted" ? item.attribs['data-original-title']?.split(' ').pop() : null
