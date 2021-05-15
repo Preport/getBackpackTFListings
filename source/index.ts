@@ -65,9 +65,11 @@ class getListings {
                     case 'Unusualifier':
                         target = item.attribs['data-priceindex'];
                 }
+                const defindex = parseInt(item.attribs['data-defindex'])
                 const craftnumber = item.attribs['data-origin'] === "Crafted" ? item.attribs['data-original-title']?.split(' ').pop() : null
                 const skuObject: sku = {
-                    defindex: parseInt(item.attribs['data-defindex']),
+                    // 9536 === WarPaint
+                    defindex: defindex === 9536 ? parseInt(`${(paintkit > 200 ? "17" : "16") + paintkit}`) : defindex,
                     quality: parseInt(item.attribs['data-quality']),
                     australium: item.attribs['data-australium'] == "1",
                     craftable: item.attribs['data-craftable'] == "1",
