@@ -35,7 +35,7 @@ const stockMap: Map<string, string> = new Map()
     .set("735", "736"); // Sapper
 
 function proxyToStr(proxy: getListings.Proxy) {
-    return 'http://' + proxy.auth.username + ':' + proxy.auth.password + '@' + proxy.host + ":" + proxy.port;
+    return 'https://' + proxy.auth.username + ':' + proxy.auth.password + '@' + proxy.host + ":" + proxy.port;
 }
 
 class getListings {
@@ -64,13 +64,15 @@ class getListings {
             sell: []
         }
         for (let page = 1; page < pageAmount + 1; page++) {
+            const agent = this.__getRoundRobinProxy();
             const res = await got.get(url + '&page=' + page, {
                 headers: {
                     'Cookie': "user-id=" + randomStr(20),
                     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0",
                 },
                 agent: {
-                    http: this.__getRoundRobinProxy()
+                    https: agent,
+                    http: agent,
                 },
                 timeout: 10000
             })
