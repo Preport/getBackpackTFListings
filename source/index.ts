@@ -94,8 +94,14 @@ class getListings {
                 const button = $('.btn:not(.btn-warning)', body).get(0);
                 const tradeUrl = button.attribs.href.includes('tradeoffer') ? button.attribs.href : null;
                 const addFriend = tradeUrl ? null : button.attribs.href;
+
+                const [created, bumped] = Array.from($('.timeago', body).children().map((_i, chil) => new Date(chil.attribs.datetime).valueOf()));
                 listingstoReturn[intent as "buy"].push({
+                    id: listing.attribs.id,
                     automatic: ((button.attribs["data-original-title"] || button.attribs.title) as string)?.includes('user agent') ?? false,
+                    created,
+                    bumped,
+                    count: parseInt($('span[data-tip]', body)?.text()) || 1,
                     details: $('p', body).text(),
                     isOnline: $('.online', body).length === 1,
                     price: {
@@ -128,7 +134,11 @@ namespace getListings {
         }
     }
     export interface Listing {
-        sku: string,        // tf2-sku-2 in string .
+        id: string,         // Listing's unique id.
+        sku: string,        // tf2-sku-2 in string.
+        created: string,    // epoch time of the when the listing was created in ms.
+        bumped: string,     // epoch time of the when the listing was bumped in ms. // will be same as created if it was never bumped.
+        count: number,      // amount of the items lister is selling.
         automatic: boolean, // true if the lister is automatic.
         isOnline: boolean,   // true if the lister is online.
         details: string,    // Comment below the listing.
@@ -144,7 +154,11 @@ namespace getListings {
     }
     export type Response = {
         [intent in 'buy' | 'sell']: {
+            id: string,
             sku: string,
+            created: number,
+            bumped: number,
+            count: number,
             automatic: boolean,
             isOnline: boolean,
             details: string,
