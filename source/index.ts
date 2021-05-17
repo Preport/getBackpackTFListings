@@ -1,6 +1,6 @@
 import cheerio from 'cheerio'
 import got from 'got'
-import { HttpsProxyAgent } from 'hpagent'
+import hpagent from 'hpagent'
 import sku from 'tf2-sku-2'
 import cuint from 'cuint'
 const stockMap: Map<string, string> = new Map()
@@ -35,21 +35,33 @@ const stockMap: Map<string, string> = new Map()
     .set("735", "736"); // Sapper
 
 function proxyToStr(proxy: getListings.Proxy) {
-    return 'https://' + proxy.auth.username + ':' + proxy.auth.password + '@' + proxy.host + ":" + proxy.port;
+    return 'http://' + proxy.auth.username + ':' + proxy.auth.password + '@' + proxy.host + ":" + proxy.port;
 }
 
 class getListings {
     proxNum: number = 0
-    proxyAgents: HttpsProxyAgent[]
+    proxyAgents: {
+        https: hpagent.HttpsProxyAgent
+        http: hpagent.HttpProxyAgent
+    }[]
     /**
      * @param proxies Array of proxies if you are thinking of using `getListings` function alot.
      */
     constructor(proxies?: getListings.Proxy[] | string[]) {
-        this.proxyAgents = proxies?.map((prox: getListings.Proxy | string) => new HttpsProxyAgent({
-            keepAlive: true,
-            maxSockets: 256,
-            proxy: typeof prox === 'string' ? prox : proxyToStr(prox)
-        })) || [];
+        this.proxyAgents = proxies?.map((prox: getListings.Proxy | string) => {
+            return {
+                https: new hpagent.HttpsProxyAgent({
+                    keepAlive: true,
+                    maxSockets: 256,
+                    proxy: typeof prox === 'string' ? prox : proxyToStr(prox)
+                }),
+                http: new hpagent.HttpProxyAgent({
+                    keepAlive: true,
+                    maxSockets: 256,
+                    proxy: typeof prox === 'string' ? prox : proxyToStr(prox)
+                }),
+            }
+        }) || [];
     }
     /**
      * @param url the url to get
@@ -70,10 +82,7 @@ class getListings {
                     'Cookie': "user-id=" + randomStr(20),
                     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0",
                 },
-                agent: {
-                    https: agent,
-                    http: agent,
-                },
+                agent,
                 timeout: 10000
             })
             const $ = cheerio.load(res.body);
