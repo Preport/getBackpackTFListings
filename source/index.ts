@@ -3,6 +3,37 @@ import got from 'got'
 import { HttpsProxyAgent } from 'hpagent'
 import sku from 'tf2-sku-2'
 import cuint from 'cuint'
+const stockMap: Map<string, string> = new Map()
+    .set("0", "190") // Bat
+    .set("1", "191") // Bottle
+    .set("2", "192") // Fireaxe
+    .set("3", "193") // Club
+    .set("4", "194") // Knife
+    .set("5", "195") // Fists
+    .set("6", "196") // Shovel
+    .set("7", "197") // Wrench
+    .set("8", "198") // Bonesaw
+    .set("9", "199") // Shotgun - Engineer (Primary)
+    .set("10", "199") // Shotgun - Soldier
+    .set("11", "199") // Shotgun - Heavy
+    .set("12", "199") // Shotgun - Pyro
+    .set("13", "200") // Scattergun
+    .set("14", "201") // Sniper Rifle
+    .set("15", "202") // Minigun
+    .set("16", "203") // SMG
+    .set("17", "204") // Syringe Gun
+    .set("18", "205") // Rocket Launcher
+    .set("19", "206") // Grenade Launcher
+    .set("20", "207") // Stickybomb Launcher
+    .set("21", "208") // Flamethrower
+    .set("22", "209") // Pistol - Engineer
+    .set("23", "209") // Pistol - Scout
+    .set("24", "210") // Revolver
+    .set("25", "737") // Construction PDA
+    .set("29", "211") // Medigun
+    .set("30", "212") // Invis Watch
+    .set("735", "736"); // Sapper
+
 function proxyToStr(proxy: getListings.Proxy) {
     return 'http://' + proxy.auth.username + ':' + proxy.auth.password + '@' + proxy.host + ":" + proxy.port;
 }
@@ -65,7 +96,7 @@ class getListings {
                     case 'Unusualifier':
                         target = item.attribs['data-priceindex'];
                 }
-                const defindex = parseInt(item.attribs['data-defindex'])
+                const defindex = parseInt(stockMap.get(item.attribs['data-defindex']) ?? item.attribs['data-defindex']);
                 const craftnumber = item.attribs['data-origin'] === "Crafted" ? item.attribs['data-original-title']?.split(' ').pop() : null
                 const skuObject: sku = {
                     // 9536 === WarPaint
