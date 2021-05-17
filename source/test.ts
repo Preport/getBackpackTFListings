@@ -7,7 +7,8 @@ let urls = [
     'https://backpack.tf/classifieds?quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=0&spell=Exorcism%2CVoices%20from%20Below%2CPumpkin%20Bombs%2CHalloween%20Fire',
     'https://backpack.tf/classifieds?item=Kit&quality=6&tradable=1&craftable=-1&australium=-1&killstreak_tier=2',
     'https://backpack.tf/classifieds?item=Fabricator&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=2',
-    'https://backpack.tf/classifieds?item=Strangifier&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=0'
+    'https://backpack.tf/classifieds?item=Strangifier&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=0',
+    'https://backpack.tf/classifieds?item=Unusualifier&quality=5&tradable=1&australium=-1&killstreak_tier=0'
 ]
 async function t() {
     const res = await Promise.all(urls.map(url => gl.getListings(url)))
@@ -34,6 +35,10 @@ async function t() {
                     case 4:
                         //Strangifier
                         if (!list.sku.includes(';td-')) throw new ListingError("Strangifier Check Failed", list);
+                        break;
+                    case 5:
+                        //Unusualifier
+                        if (!list.sku.includes(';td-')) throw new ListingError("Unusualifier Check Failed", list);
                         break;
                 }
             })
