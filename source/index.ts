@@ -137,7 +137,7 @@ class getListings {
                 const tradeUrl = button.attribs.href.includes('tradeoffer') ? button.attribs.href : null;
                 const addFriend = tradeUrl ? null : button.attribs.href;
 
-                const [created, bumped] = Array.from($('.timeago', body).map((_i, chil) => new Date(chil.attribs.datetime).valueOf()));
+                const [bumped, created] = Array.from($('.timeago', body).map((_i, chil) => new Date(chil.attribs.datetime).valueOf()));
                 listingstoReturn[intent as "buy"].push({
                     id: listing.attribs.id,
                     automatic: ((button.attribs["data-original-title"] || button.attribs.title) as string)?.includes('user agent') ?? false,
