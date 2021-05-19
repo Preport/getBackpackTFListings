@@ -111,7 +111,7 @@ class getListings {
                 const craftnumber = item.attribs['data-origin'] === "Crafted" ? item.attribs['data-original-title']?.split(' ').pop() : null
                 const skuObject: sku = {
                     // 9536 === WarPaint
-                    defindex: defindex === 9536 ? parseInt(`${(paintkit > 200 ? "17" : "16") + paintkit}`) : defindex,
+                    defindex: defindex === 9536 ? parseInt(`${((Math.floor((paintkit) / 100)) % 2 === 0 ? "17" : "16") + paintkit}`) : defindex,
                     quality: parseInt(item.attribs['data-quality']),
                     australium: item.attribs['data-australium'] == "1",
                     craftable: item.attribs['data-craftable'] == "1",
