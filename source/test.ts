@@ -6,7 +6,7 @@ let urls = [
     'https://backpack.tf/classifieds?quality=15&tradable=1&craftable=1&australium=-1&killstreak_tier=0',
     'https://backpack.tf/classifieds?quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=0&spell=Exorcism%2CVoices%20from%20Below%2CPumpkin%20Bombs%2CHalloween%20Fire',
     'https://backpack.tf/classifieds?item=Kit&quality=6&tradable=1&craftable=-1&australium=-1&killstreak_tier=2',
-    'https://backpack.tf/classifieds?item=Fabricator&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=2',
+    'https://backpack.tf/classifieds?item=Fabricator&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=3',
     'https://backpack.tf/classifieds?item=Strangifier&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=0',
     'https://backpack.tf/classifieds?item=Unusualifier&quality=5&tradable=1&australium=-1&killstreak_tier=0'
 ]
@@ -35,6 +35,7 @@ async function t() {
                     case 3:
                         //Kit Fabricator
                         if (!list.sku.includes(';td-') || !list.sku.includes(';od-') || !list.sku.includes(';oq-')) throw new ListingError("Fabricator Check Failed", list);
+                        if (intent === "sell" && !(list.sheen && list.killstreaker)) throw new ListingError("Killstreaker/Sheen Check Failed.", list);
                         break;
                     case 4:
                         //Strangifier

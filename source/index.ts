@@ -153,6 +153,8 @@ class getListings {
                     sku: sku.fromObject(skuObject),
                     spells,
                     parts,
+                    sheen: item.attribs['data-sheen'] || null,
+                    killstreaker: item.attribs['data-killstreaker'] || null,
                     steamid64: cuint.UINT64(parseInt(item.attribs['data-listing_account_id']), 17825793).toString(),
                     tradeUrl,
                     addFriend
@@ -192,7 +194,9 @@ namespace getListings {
             metal: number
         },
         spells: string[],   // Spells of the listed item.
-        parts: string[]     // Strange Parts of the listed item.
+        parts: string[],    // Strange Parts of the listed item.
+        sheen: string,      // Sheen of the item if it's kt-2 or kt-3
+        killstreaker: string// Killstreaker of the item if it's kt-3
     }
     export type Response = {
         [intent in 'buy' | 'sell']: {
@@ -212,7 +216,9 @@ namespace getListings {
                 metal: number
             },
             spells: string[],
-            parts: string[]
+            parts: string[],
+            sheen: string,
+            killstreaker: string
         }[]
     }
 }
