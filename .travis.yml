@@ -1,8 +1,0 @@
-name: CI
-
-on: [pull_request]
-language: node_js
-before_install:
-  - npm i -g npm
-node_js: 
-  - node
