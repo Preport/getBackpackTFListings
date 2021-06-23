@@ -1,11 +1,11 @@
 # Get BackpackTF Listings
-### <p align="center">[![Build Status](https://github.com/Preport/getBackpackTFListings/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Preport/getBackpackTFListings/actions/workflows/main.yml)</p>
+### <p align="center">[![Build Status](https://github.com/Preport/getBackpackTFListings/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Preport/getBackpackTFListings/actions/workflows/main.yml) [![Npm package (latest)](https://img.shields.io/npm/v/getbackpacktflistings/latest)](https://www.npmjs.com/package/getbackpacktflistings)</p>
 ## Usage Example
 ```typescript
 import getBackpackTFListings from 'getbackpacktflistings' // TypeScript
 const getBackpackTFListings = require('getbackpacktflistings') // CommonJS
 
-const gl = new getListings();
+const gl = new getBackpackTFListings();
 
 async function t() {
     const response = await gl.getListings('https://backpack.tf/classifieds?item=Bill%27s%20Hat&quality=6&tradable=1&craftable=1&australium=-1&killstreak_tier=0')
