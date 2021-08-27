@@ -1,6 +1,6 @@
 {
   "name": "getbackpacktflistings",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Useful for getting classified listings without using the backpack.tf's API which is rate-limited.",
   "main": "dist/index.js",
   "scripts": {
