@@ -80,11 +80,17 @@ class getListings {
             const res = await got.get(url + '&page=' + page, {
                 headers: {
                     'Cookie': "user-id=" + randomStr(20),
+                    'Referer': 'backpack.tf',
                     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0",
                 },
                 agent,
                 timeout: 10000
             })
+            const host = res.url.split('//')[1].split('/')[0]
+            if (host !== "backpack.tf")
+                throw new Error(
+                    `Got a response from ${host} instead of backpack.tf.\nThis is probably a temporary error but if it happens frequently create an issue on github.`
+                );
             const $ = cheerio.load(res.body);
             $('.listing').toArray().forEach(listing => {
                 const [item, body] = $('.item,.listing-body', listing).toArray()
