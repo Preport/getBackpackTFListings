@@ -153,6 +153,12 @@ class getListings {
                         .map(sp => item.attribs['data-part_name_' + sp])
                         .filter(sp => sp);
                     const priceStrings = (item.attribs['data-listing_price'] as string).split(' ');
+
+                    if (priceStrings.length === 1) {
+                        //marketplace listing just skip it
+                        return;
+                    }
+
                     const isK = priceStrings[1].startsWith('key');
                     const intent = item.attribs['data-listing_intent'];
                     const button = $('.btn:not(.btn-warning)', body).get(0);
