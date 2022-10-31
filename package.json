@@ -15,7 +15,7 @@
     "cheerio": "^1.0.0-rc.6",
     "cuint": "^0.2.2",
     "got": "^11.8.2",
-    "hpagent": "^0.1.1",
+    "hpagent": "^1.2.0",
     "tf2-sku-2": "^2.0.1"
   },
   "devDependencies": {
