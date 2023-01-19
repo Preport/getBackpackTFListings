@@ -82,7 +82,8 @@ class getListings {
                 headers: {
                     Cookie: 'user-id=' + randomStr(20),
                     Referer: 'backpack.tf',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:67.0) Gecko/20100101 Firefox/67.0',
+                    'Accept-Encoding': 'gzip;q=1.0,identity;q=0'
                 },
                 agent,
                 timeout: 10000
